@@ -1,1 +1,11 @@
 .svn
+*.cm*
+*.o
+*.a
+.omake
+.omakedb*
+.config
+*.exe
+*.opt
+.*.magic
+boot
