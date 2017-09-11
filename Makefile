@@ -34,3 +34,15 @@ all: bootstrap
 
 install: all
 	OMAKEFLAGS= OMAKEPATH=lib src/main/omake --dotomake .omake --force-dotomake -j2 install
+
+clean:
+	rm -rf .config .omake* boot */*.default omake-boot
+	rm -f `find lib -name '*.install'`
+	rm -f `find . -name '*.cm*'`
+	rm -f `find . -name '*.o'`
+	rm -f `find . -name '*.opt'`
+	rm -f `find . -name '*.a'`
+	rm -f `find . -name '*.magic'`
+	rm -f src/libmojave/*.ml*
+	rm -f src/clib/fam* src/clib/inotify* src/clib/lm_* src/clib/unixsupport.h
+	rm -f src/env/omake_ast_lex.ml src/env/omake_ast_parse.ml src/env/omake_ast_parse.mli src/env/omake_ast_parse.mly src/env/omake_exp_parse.ml src/env/omake_exp_parse.mli src/env/omake_gen_parse src/magic/omake_gen_magic src/magic/omake_magic.ml src/main/cvs_realclean src/main/omake src/main/osh src/shell/omake_shell_parse.ml src/shell/omake_shell_parse.mli src/shell/omake_shell_sys.ml src/util/ocaml_patch.ml
