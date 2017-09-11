@@ -15,6 +15,7 @@ lib/*/*.install
 lib/*/*/*.install
 .omake*
 .config
+*.omc
 lib/OMakefile.default
 lib/OMakeroot.default
 omake-boot
