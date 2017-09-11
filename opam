@@ -1,0 +1,8 @@
+opam-version: "1"
+maintainer: "https://github.com/ocaml/opam-repository/issues"
+build: [
+  [make "bootstrap" "PREFIX=%{prefix}%"]
+  [make "all" "PREFIX=%{prefix}%"]
+]
+depends: ["ocamlfind"]
+install: [make "install" "PREFIX=%{prefix}%"]
