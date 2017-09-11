@@ -142,15 +142,6 @@ val get_max_boxes : unit -> int
 val over_max_boxes : unit -> bool
 
 (*
- * Tabulations.
- *)
-val open_tbox : unit -> unit
-val close_tbox : unit -> unit
-val print_tbreak : int -> int -> unit
-val set_tab : unit -> unit
-val print_tab : unit -> unit
-
-(*
  * Ellipsis.
  *)
 val set_ellipsis_text : string -> unit
@@ -211,11 +202,6 @@ val pp_force_newline             : formatter -> unit -> unit
 val pp_print_flush               : formatter -> unit -> unit
 val pp_print_newline             : formatter -> unit -> unit
 val pp_print_if_newline          : formatter -> unit -> unit
-val pp_open_tbox                 : formatter -> unit -> unit
-val pp_close_tbox                : formatter -> unit -> unit
-val pp_print_tbreak              : formatter -> int -> int -> unit
-val pp_set_tab                   : formatter -> unit -> unit
-val pp_print_tab                 : formatter -> unit -> unit
 val pp_set_margin                : formatter -> int -> unit
 val pp_get_margin                : formatter -> unit -> int
 val pp_set_max_indent            : formatter -> int -> unit
