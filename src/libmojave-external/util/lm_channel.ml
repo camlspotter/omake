@@ -337,10 +337,12 @@ let of_string s =
    of_string string_sym 1 0 (String.copy s)
 
 let info channel =
-   let id = channel.channel_id in
-   let kind = channel.channel_kind in
-   let mode = channel.channel_mode in
-   let binary = channel.channel_binary in
+   let { channel_id = id;
+         channel_kind = kind;
+         channel_mode = mode;
+         channel_binary = binary
+       } = channel
+   in
       id, kind, mode, binary
 
 let name channel =
@@ -466,11 +468,13 @@ let squash_text buffer off amount =
  * Get the line/char for a particular point in the input buffer.
  *)
 let line_of_index info buffer index =
-   let start_line = info.start_line in
-   let start_char = info.start_char in
-   let middle_index = info.middle_index in
-   let middle_line = info.middle_line in
-   let middle_char = info.middle_char in
+   let { start_line   = start_line;
+         start_char   = start_char;
+         middle_index = middle_index;
+         middle_line  = middle_line;
+         middle_char  = middle_char
+       } = info
+   in
    let rec search line char i =
       if i = index then
          begin
@@ -505,10 +509,12 @@ let reset_input_buffer info =
       info.lex_index    <- 0
 
 let shift_input_buffer info =
-   let in_buffer = info.in_buffer in
-   let in_index = info.in_index in
-   let lex_index = info.lex_index in
-   let in_max = info.in_max in
+   let { in_buffer = in_buffer;
+         in_index  = in_index;
+         lex_index = lex_index;
+         in_max    = in_max
+       } = info
+   in
    let line, char = line_of_index info in_buffer in_index in
       String.blit in_buffer in_index in_buffer 0 (in_max - in_index);
       info.start_line   <- line;
@@ -556,8 +562,10 @@ let reset_output_buffer info =
  * flushing.
  *)
 let expand_output info =
-   let buffer = info.out_buffer in
-   let max = info.out_max in
+   let { out_buffer = buffer;
+         out_max    = max
+       } = info
+   in
       if max = String.length buffer then begin
          let buffer2 = String.create (max * 2) in
             String.blit buffer 0 buffer2 0 max;
@@ -567,8 +575,10 @@ let expand_output info =
       end
 
 let to_string info =
-   let buffer = info.out_buffer in
-   let max = info.out_max in
+   let { out_buffer = buffer;
+         out_max = max
+       } = info
+   in
       String.sub buffer 0 max
 
 (************************************************************************
@@ -604,10 +614,12 @@ let setup_write_buffer info =
  *)
 let flush_output_once info =
    setup_write_buffer info;
-   let off = info.write_index in
-   let max = info.write_max in
-   let buf = info.write_buffer in
-   let write = info.write_fun in
+   let { write_index  = off;
+         write_max    = max;
+         write_buffer = buf;
+         write_fun    = write
+       } = info
+   in
    let count = write buf off (max - off) in
    let off' = off + count in
       if off' = max then
@@ -620,13 +632,17 @@ let flush_output_once info =
  *)
 let flush_aux info =
    setup_write_buffer info;
-   let buf = info.write_buffer in
-   let writer = info.write_fun in
+   let { write_buffer = buf;
+         write_fun    = writer
+       } = info
+   in
 
    (* Now write the data directly *)
    let rec write () =
-      let index = info.write_index in
-      let max = info.write_max in
+      let { write_index = index;
+            write_max = max
+          } = info
+      in
       let len = max - index in
          if len <> 0 then
             let count = writer buf index len in
@@ -685,8 +701,10 @@ let close info =
  * Print a byte.
  *)
 let rec output_char info c =
-   let max = info.out_max in
-   let buffer = info.out_buffer in
+   let { out_max = max;
+         out_buffer = buffer
+       } = info
+   in
       flush_input info;
       if max = String.length buffer then
          begin
@@ -706,8 +724,10 @@ let output_byte info c =
  * Write a substring.
  *)
 let rec output_buffer info buf off len =
-   let max = info.out_max in
-   let buffer = info.out_buffer in
+   let { out_max = max;
+         out_buffer = buffer
+       } = info
+   in
    let avail = String.length buffer - max in
       flush_input info;
       if len <> 0 then
@@ -738,17 +758,21 @@ let write info buf off len =
  * Check if there is input already in the buffer.
  *)
 let poll info =
-   let index = info.in_index in
-   let max = info.in_max in
+   let { in_index = index;
+         in_max = max
+       } = info
+   in
       index <> max
 
 (*
  * Get data when the buffer is empty.
  *)
 let fillbuf info =
-   let binary = info.channel_binary in
-   let buf = info.in_buffer in
-   let reader = info.read_fun in
+   let { channel_binary = binary;
+         in_buffer = buf;
+         read_fun = reader
+       } = info
+   in
    let count = reader buf 0 buf_size in
    let count =
       if count = 0 then
@@ -773,9 +797,11 @@ let fillbuf info =
  * Get a single char.
  *)
 let rec input_char info =
-   let index = info.in_index in
-   let max = info.in_max in
-   let buf = info.in_buffer in
+   let { in_index = index;
+         in_max = max;
+         in_buffer = buf;
+       } = info
+   in
       flush_output info;
       if index = max then
          begin
@@ -797,9 +823,11 @@ let input_byte info =
  * Read data into a buffer.
  *)
 let rec input_buffer info s off len =
-   let index = info.in_index in
-   let max = info.in_max in
-   let buf = info.in_buffer in
+   let { in_index = index;
+         in_max = max;
+         in_buffer = buf
+       } = info
+   in
    let avail = max - index in
       flush_output info;
       if len <> 0 then
@@ -856,10 +884,12 @@ let input_entire_line info =
  * Read allows for partial reading.
  *)
 let read info s off len =
-   let index = info.in_index in
-   let max = info.in_max in
-   let buf = info.in_buffer in
-   let reader = info.read_fun in
+   let { in_index = index;
+         in_max = max;
+         in_buffer = buf;
+         read_fun = reader
+       } = info
+   in
    let avail = max - index in
       flush_output info;
       if avail = 0 then
@@ -895,11 +925,13 @@ let seek info pos whence =
  * Get the current location.
  *)
 let loc info =
-   let out_max = info.out_max in
-   let in_index = info.in_index in
-   let in_buffer = info.in_buffer in
-   let out_buffer = info.out_buffer in
-   let file = info.channel_file in
+   let { out_max = out_max;
+         in_index = in_index;
+         in_buffer = in_buffer;
+         out_buffer = out_buffer;
+         channel_file = file
+       } = info
+   in
    let line, char =
       if out_max <> 0 then
          line_of_index info out_buffer out_max
@@ -1100,8 +1132,10 @@ struct
     * Start lex mode.
     *)
    let lex_start channel =
-      let index = channel.in_index in
-      let buffer = channel.in_buffer in
+      let { in_index = index;
+            in_buffer = buffer
+          } = channel
+      in
       let prev =
          if index = 0 then
             bof
@@ -1115,8 +1149,10 @@ struct
     * Restart at a previous position.
     *)
    let lex_restart channel pos =
-      let max = channel.in_max in
-      let index = channel.in_index in
+      let { in_max = max;
+            in_index = index
+          } = channel
+      in
          assert (pos >= 0 && pos <= max - index);
          channel.lex_index <- index + pos
 
@@ -1132,16 +1168,20 @@ struct
     * Get the string matched by the lexer.
     *)
    let lex_string channel pos =
-      let start = channel.in_index in
-      let buffer = channel.in_buffer in
+      let { in_index = start;
+            in_buffer = buffer
+          } = channel
+      in
          String.sub buffer start pos
 
    (*
     * Get the string matched by the lexer.
     *)
    let lex_substring channel off len =
-      let start = channel.in_index in
-      let buffer = channel.in_buffer in
+      let { in_index = start;
+            in_buffer = buffer
+          } = channel
+      in
          String.sub buffer (start + off) len
 
    (*
@@ -1149,11 +1189,13 @@ struct
     * We can't discard any of the existing data.
     *)
    let rec lex_fill channel =
-      let max = channel.in_max in
-      let buffer = channel.in_buffer in
-      let start = channel.in_index in
-      let reader = channel.read_fun in
-      let binary = channel.channel_binary in
+      let { in_max         = max;
+            in_buffer      = buffer;
+            in_index       = start;
+            read_fun       = reader;
+            channel_binary = binary
+          } = channel
+      in
       let len = String.length buffer in
       let amount = len - max in
          (* If we have space, fill it *)
@@ -1203,9 +1245,11 @@ struct
     * Get the next character in lex mode.
     *)
    let lex_next channel =
-      let max = channel.in_max in
-      let buffer = channel.in_buffer in
-      let index = channel.lex_index in
+      let { in_max = max;
+            in_buffer = buffer;
+            lex_index = index
+          } = channel
+      in
          if index = max then
             lex_fill channel
          else
@@ -1223,12 +1267,14 @@ struct
     * Get the location of the buffer.
     *)
    let lex_loc channel off =
-      let line = channel.start_line in
-      let char = channel.start_char in
-      let file = channel.channel_file in
-      let index = channel.lex_index in
-      let buffer = channel.in_buffer in
-      let max = channel.in_max in
+      let { start_line = line;
+            start_char = char;
+            channel_file = file;
+            lex_index = index;
+            in_buffer = buffer;
+            in_max = max
+          } = channel
+      in
       let line1, char1 =
          if index > max then
             line, char
@@ -1247,9 +1293,11 @@ struct
     * Add any remaining buffered text to a buffer.
     *)
    let lex_buffer channel buf =
-      let max = channel.in_max in
-      let buffer = channel.in_buffer in
-      let start = channel.in_index in
+      let { in_max    = max;
+            in_buffer = buffer;
+            in_index  = start
+          } = channel
+      in
          Buffer.add_substring buf buffer start (max - start);
          channel.in_index <- max
 end

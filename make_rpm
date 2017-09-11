@@ -3,7 +3,7 @@
 #
 # Configuration
 #
-. ./config_rpm
+. config_rpm
 
 #
 # Make a tarball
@@ -12,8 +12,9 @@
 
 #
 # Build the RPM
+# BUG: --nodeps is needed only for the build on Cygwin.
 #
-rpmbuild -ta download/$TARBALL "$@"
+rpmbuild -ta --nodeps download/$TARBALL
 
 #
 # Copy the packages back here

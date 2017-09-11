@@ -173,10 +173,11 @@ let create_debug
  *)
 let load_debug name =
    let rec search = function
-      info :: _ when info.info_name = name ->
-         info.info_flag
-    | _ :: t ->
-         search t
+      { info_name = name'; info_flag = flag } :: t ->
+         if name' = name then
+            flag
+         else
+            search t
     | [] ->
          raise (Failure (sprintf "Lm_debug.load_debug: variable '%s' has not been created" name))
    in
@@ -188,10 +189,11 @@ let load_debug name =
 let set_debug name flag =
    let rec search = function
       h :: t ->
-         if h.info_name = name then
-            h.info_flag := flag
-         else
-            search t
+         let { info_name = name'; info_flag = flag' } = h in
+            if name' = name then
+               flag' := flag
+            else
+               search t
     | [] ->
 (*
          (* Try a C function *)
@@ -225,8 +227,9 @@ let get_debug name =
    let rec search = function
       h :: t ->
          if h.info_name = name then
+            let { info_info = description; info_flag = flag } = h in
             let description =
-               match h.info_info with
+               match description with
                   Some desc ->
                      desc
                 | None ->
@@ -234,7 +237,7 @@ let get_debug name =
             in
                { debug_name = name;
                  debug_description = description;
-                 debug_value = !(h.info_flag)
+                 debug_value = !flag
                }
          else
             search t
@@ -314,6 +317,9 @@ let split c s =
 (*
  * Set debug flags from the environment.
  *)
+let set_possible_debug_flags _ _ flags =
+   List.iter (fun name -> set_possible_debug name true) (split ":" flags)
+
 let set_debug_flags flags =
    let names = split ":" flags in
       try List.iter (fun name -> set_debug name true) names with

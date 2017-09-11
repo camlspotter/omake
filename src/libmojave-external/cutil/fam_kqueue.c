@@ -181,12 +181,6 @@ static kevent_t *new_kevent() {
     return ev;
 }
 
-#if defined(__NetBSD__)
-typedef intptr_t kqueue_udata_t;
-#else
-typedef void *kqueue_udata_t;
-#endif
-
 /*
  * Start monitoring a directory.
  * We store the DirInfo pointer as the userdata in the kevent.
@@ -205,7 +199,7 @@ static int monitor_start(FAMConnection *fc, DirInfo *dir)
         dir->kevent = kev;
         /* Register interest in the MON_FLAGS flags of the dir */
         EV_SET(kev, dir->handle, EVFILT_VNODE, EV_ADD | EV_CLEAR, MON_FLAGS,
-                (intptr_t) NULL, (kqueue_udata_t) dir);
+                (intptr_t) NULL, (void *)dir);
         code = kevent(fc->id, kev, 1, NULL, 0, &gTime0);
 #ifdef FAM_DEBUG
         fprintf(stderr,

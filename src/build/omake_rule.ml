@@ -768,7 +768,7 @@ let lazy_command venv pos command =
          let fv = free_vars_exp_list el in
             CommandSection (eval_string_exp venv pos s, fv, el)
     | ShellExp (loc, s) ->
-         CommandValue (loc, venv_get_env venv, s)
+         CommandValue (loc, ValStringExp (venv_get_env venv, s))
     | _ ->
          let fv = free_vars_exp command in
             CommandSection (ValData "eval", fv, [command])
@@ -1121,8 +1121,7 @@ and eval_rule venv loc target sources sloppy_deps values commands =
             let commands = ([], CommandEval e) :: commands in
             let fv = free_vars_union fv fv' in
                commands, fv
-       | CommandValue (loc, env, s) ->
-            let v = ValStringExp (env, s) in
+       | CommandValue (loc, v) ->
             let commands =
                try
                   let flags, pipe = pipe_of_value venv find_alias options pos loc v in

@@ -32,6 +32,7 @@
  *)
 open Lm_debug
 open Lm_printf
+open Lm_map_sig
 
 let debug_notify =
    create_debug {
@@ -152,8 +153,10 @@ let is_path_prefix (root1, path1) (root2, path2) =
 let is_monitored_name requests name =
    let new_path = path_of_name name in
       IntTable.exists (fun _ job ->
-            let path = job.job_path in
-            let recursive = job.job_recursive in
+            let { job_path = path;
+                  job_recursive = recursive
+                } = job
+            in
                new_path = path || (recursive && is_path_prefix path new_path)) requests
 
 (************************************************************************
@@ -212,16 +215,18 @@ let close notify =
 (*
  * Get the file descriptor.
  *)
-let file_descr notify =
-   notify.notify_fd
+let file_descr { notify_fd = fd } =
+   fd
 
 (*
  * Monitoring.
  *)
 let monitor notify dir recursive =
-   let info = notify.notify_info in
-   let dirs = notify.notify_dirs in
-   let requests = notify.notify_requests in
+   let { notify_info = info;
+         notify_dirs = dirs;
+         notify_requests = requests
+       } = notify
+   in
    let name = name_of_dir dir in
       if not (is_monitored_name requests name) then begin
          if !debug_notify then
@@ -245,9 +250,11 @@ let monitor notify dir recursive =
  * Suspend notifications.
  *)
 let suspend notify dir =
-   let info = notify.notify_info in
-   let dirs = notify.notify_dirs in
-   let requests = notify.notify_requests in
+   let { notify_info = info;
+         notify_dirs = dirs;
+         notify_requests = requests
+       } = notify
+   in
    let dir = name_of_dir dir in
    let request =
       try StringTable.find dirs dir with
@@ -262,8 +269,10 @@ let suspend notify dir =
          end
 
 let suspend_all notify =
-   let info = notify.notify_info in
-   let requests = notify.notify_requests in
+   let { notify_info = info;
+         notify_requests = requests
+       } = notify
+   in
       IntTable.iter (fun _ job ->
             if job.job_running then
                begin
@@ -272,9 +281,11 @@ let suspend_all notify =
                end) requests
 
 let resume notify dir =
-   let info = notify.notify_info in
-   let dirs = notify.notify_dirs in
-   let requests = notify.notify_requests in
+   let { notify_info = info;
+         notify_dirs = dirs;
+         notify_requests = requests
+       } = notify
+   in
    let dir = name_of_dir dir in
    let request =
       try StringTable.find dirs dir with
@@ -289,8 +300,10 @@ let resume notify dir =
          end
 
 let resume_all notify =
-   let info = notify.notify_info in
-   let requests = notify.notify_requests in
+   let { notify_info = info;
+         notify_requests = requests
+       } = notify
+   in
       IntTable.iter (fun _ job ->
             if not job.job_running then
                begin
@@ -302,9 +315,11 @@ let resume_all notify =
  * Cancel a request.
  *)
 let cancel notify dir =
-   let info = notify.notify_info in
-   let dirs = notify.notify_dirs in
-   let requests = notify.notify_requests in
+   let { notify_info = info;
+         notify_dirs = dirs;
+         notify_requests = requests
+       } = notify
+   in
    let dir = name_of_dir dir in
    let request =
       try StringTable.find dirs dir with
@@ -317,8 +332,10 @@ let cancel notify dir =
       notify.notify_requests <- IntTable.remove requests request
 
 let cancel_all notify =
-   let info = notify.notify_info in
-   let requests = notify.notify_requests in
+   let { notify_info = info;
+         notify_requests = requests
+       } = notify
+   in
       IntTable.iter (fun request _ -> notify_cancel info request) requests;
       notify.notify_dirs <- StringTable.empty;
       notify.notify_requests <- IntTable.empty

@@ -40,9 +40,6 @@ let debug_string =
         debug_value = false
       }
 
-(*
- * Need these for converting numbers.
- *)
 let code0 = Char.code '0'
 let codea = Char.code 'a'
 let codeA = Char.code 'A'
@@ -616,13 +613,18 @@ let tokens_create wrap group =
  * Get the tokens list.
  *)
 let tokens_flush info =
+   let { tokens_group  = group;
+         tokens_list   = tokens;
+         tokens_prefix = prefix
+       } = info
+   in
    let tokens =
-      match info.tokens_prefix with
+      match prefix with
          NoPrefix ->
-            info.tokens_list
+            tokens
        | WordPrefix prefix
        | QuotePrefix (_, prefix) ->
-            info.tokens_group prefix :: info.tokens_list
+            group prefix :: tokens
    in
       List.rev tokens
 
@@ -630,29 +632,38 @@ let tokens_flush info =
  * End the current word.
  *)
 let tokens_break info =
-   match info.tokens_prefix with
-      NoPrefix ->
-         info
-    | WordPrefix prefix
-    | QuotePrefix (_, prefix) ->
-         { info with tokens_list   = info.tokens_group prefix :: info.tokens_list;
-                     tokens_prefix = NoPrefix
-         }
+   let { tokens_group  = group;
+         tokens_list   = tokens;
+         tokens_prefix = prefix
+       } = info
+   in
+      match prefix with
+         NoPrefix ->
+            info
+       | WordPrefix prefix
+       | QuotePrefix (_, prefix) ->
+            { info with tokens_list   = group prefix :: tokens;
+                        tokens_prefix = NoPrefix
+            }
 
 (*
  * Add a value directly.
  * This also performs a break.
  *)
 let tokens_atomic info x =
-   let tokens = info.tokens_list in
-      match info.tokens_prefix with
+   let { tokens_group  = group;
+         tokens_list   = tokens;
+         tokens_prefix = prefix
+       } = info
+   in
+      match prefix with
          NoPrefix ->
             { info with tokens_list   = x :: tokens;
                         tokens_prefix = NoPrefix
             }
        | WordPrefix prefix
        | QuotePrefix (_, prefix) ->
-            { info with tokens_list   = x :: info.tokens_group prefix :: tokens;
+            { info with tokens_list   = x :: group prefix :: tokens;
                         tokens_prefix = NoPrefix
             }
 
@@ -747,8 +758,11 @@ let tokens_string info s =
       if len = 0 then
          info
       else
-         let tokens = info.tokens_list in
-            match info.tokens_prefix with
+         let { tokens_list = tokens;
+               tokens_prefix = prefix
+             } = info
+         in
+            match prefix with
                NoPrefix ->
                   scan_white tokens 0
              | WordPrefix prefix ->
@@ -795,11 +809,13 @@ let buffer_get_token lexer s i len =
                BufChar
 
 let tokens_lex info s =
-   let lexer = info.tokens_lexer in
-   let wrap_string = info.tokens_wrap_string in
-   let wrap_data = info.tokens_wrap_data in
-   let wrap_token = info.tokens_wrap_token in
-   let group = info.tokens_group in
+   let { tokens_lexer       = lexer;
+         tokens_wrap_string = wrap_string;
+         tokens_wrap_data   = wrap_data;
+         tokens_wrap_token  = wrap_token;
+         tokens_group       = group
+       } = info
+   in
    let len = String.length s in
 
    (* Don't add empty strings *)
@@ -886,8 +902,11 @@ let tokens_lex info s =
       if len = 0 then
          info
       else
-         let tokens = info.tokens_list in
-            match info.tokens_prefix with
+         let { tokens_list = tokens;
+               tokens_prefix = prefix
+             } = info
+         in
+            match prefix with
                NoPrefix ->
                   scan_white tokens 0
              | WordPrefix prefix ->
@@ -1059,6 +1078,13 @@ let trim s =
          ""
       else
          String.sub s first (last - first + 1)
+
+(*
+ * Need these for converting numbers.
+ *)
+let code0 = Char.code '0'
+let codea = Char.code 'a'
+let codeA = Char.code 'A'
 
 (*
  * Turn a string into an argument list.

@@ -18,7 +18,6 @@
               <a href="download.html">Download</a><br>
               <a href="omake_papers.html">Publications</a></br>
               <a href="omake_lists.html">Mailing lists</a><br>
-              <a href="contribs.html">User contributions</a><br>
               <a href="omake_users.html">Users and projects</a><br>
               <a href="http://bugzilla.metaprl.org/">Bugzilla</a><br>
               <a href="http://svn.metaprl.org/viewcvs/mojave/omake-branches/0.9.8.x/">Browse sources</a><br>
@@ -136,7 +135,7 @@ function can be used to create curried and partial applications.
    <tt>apply</tt> can also take keyword arguments.
    <li>A high-quality C parser was added to OMake &mdash; see
    <a
-href="http://svn.metaprl.org/viewcvs/*checkout*/mojave/omake-branches/0.9.8.x/lib/parse/C/Parse.om"><tt>lib/parse/C/Parse.om</tt></a>
+href=http://svn.metaprl.org/viewcvs/*checkout*/mojave/omake-branches/0.9.8.x/lib/parse/C/Parse.om"><tt>lib/parse/C/Parse.om</tt></a>
    <li>Added a LaTeX parser and spellchecker - see
 <a
 href="http://svn.metaprl.org/viewcvs/*checkout*/mojave/omake-branches/0.9.8.x/lib/parse/LaTeX/README.txt"><tt>lib/parse/LaTeX/README.txt</tt></a>
@@ -191,9 +190,6 @@ work as expected.
    X = abc   # 123
       equal($X, abc)  # this is now true
 </pre>
-      <li><tt>LaTeXDocument</tt> no longer returns the <tt>.ps</tt> file and
-      no longet creates latex <tt>.dvi</tt> and <tt>.ps</tt> rules when
-      <tt>USEPDFLATEX</tt> is true.
    </ul>
    <li><b>[Experimental]</b> Object methods can now export their fields back into the parent object.
 For example, <pre>

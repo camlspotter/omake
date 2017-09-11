@@ -157,8 +157,11 @@ let home_dir =
 let getusers () =
    let users = Lm_unix_util.getpwents () in
       List.map (fun entry ->
-            let name = entry.Unix.pw_name in
-               tilde_insert entry.Unix.pw_dir name;
+            let { Unix.pw_name = name;
+                  Unix.pw_dir  = dir
+                } = entry
+            in
+               tilde_insert dir name;
                name) users
 
 (************************************************************************
