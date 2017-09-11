@@ -1,8 +1,29 @@
-opam-version: "1"
-maintainer: "https://github.com/ocaml/opam-repository/issues"
+opam-version: "1.2"
+name: "omake"
+version: "0.9.8.7"
+maintainer: "jun.furuse@gmail.com"
+authors: [
+  "Aleksey Nogin"
+  "Jason Hickey"
+  "Gerd Stolpmann"
+]
+license: "GPL2"
+dev-repo: "https://github.com/camlspotter/omake-0.9.git"
+homepage: "https://github.com/camlspotter/omake-0.9/blob/opam-0.9.8.6-0.rc1/README.md"
+bug-reports: "https://github.com/camlspotter/omake-0.9/issues"
+
 build: [
   [make "bootstrap" "PREFIX=%{prefix}%"]
   [make "all" "PREFIX=%{prefix}%"]
 ]
-depends: ["ocamlfind"]
+
 install: [make "install" "PREFIX=%{prefix}%"]
+
+remove: [
+  [ "rm" "-f" "%{prefix}%/bin/omake" ]
+  [ "rm" "-f" "%{prefix}%/bin/osh" ]
+  [ "rm" "-rf" "%{prefix}%/lib/omake" ]
+]
+
+depends: ["ocamlfind"]
+available: [ ocaml-version >= "4.02.3" & ocaml-version < "4.07.0" ]
