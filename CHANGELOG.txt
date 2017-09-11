@@ -1,3 +1,95 @@
+OMake 0.9.8.7 [09/XX/2017]
+   - Based on omake.0.9.8.6-0.rc1 with fam.patch, netbsd_fam.patch opam.patch and readline.patch
+   - Added opam and omake.install
+   - Fixed compilation issue of NAME_MAX C define in Alpine Linux
+   - Fixed FAM problem in Linux by adding a check code to find inotify
+   - Removed several script files not used at all
+   - Added make clean
+   - Compilation fix for OCaml 4.06.0+trunk
+
+commit d3e64162b1ce73db3bd3dd92c916d9aeddab5f07
+Author: Jun Furuse <jun.furuse@asahinet.com>
+Date:   Mon Sep 11 03:03:31 2017 +0000
+
+    removed make_checkout, which is obsolete
+
+commit 5b5d4c4b62bcf0f588f9a946e3a607f0e1f84694
+Author: Jun Furuse <jun.furuse@asahinet.com>
+Date:   Mon Sep 11 03:00:52 2017 +0000
+
+    added README.md
+
+commit 7322bb1ac454586ccaafa0bf79ad1ea8c14b099c
+Author: Jun Furuse <jun.furuse@asahinet.com>
+Date:   Mon Sep 11 01:45:56 2017 +0000
+
+    Fixed FAM problem in Linux by adding a check code to find inotify
+
+commit 19650ef51b01cb2af8de425923f87881194473ce
+Author: Jun Furuse <jun.furuse@asahinet.com>
+Date:   Mon Sep 11 01:29:01 2017 +0000
+
+    Added make clean
+
+commit 8f6857fc81d095a34c86d07a90bcda13a74281e7
+Author: Jun Furuse <jun.furuse@asahinet.com>
+Date:   Mon Sep 11 01:11:56 2017 +0000
+
+    fixed .gitignore
+
+commit 6ddaf23cdf10bf1f5cc2f95005c5d3fa76c0a214
+Author: Jun Furuse <jun.furuse@asahinet.com>
+Date:   Mon Sep 11 01:09:30 2017 +0000
+
+
+commit fc687e52c26ff9ddf3d58a2a0e6a7edddecea3e1
+Author: Jun Furuse <jun.furuse@asahinet.com>
+Date:   Mon Sep 11 01:01:41 2017 +0000
+
+
+commit ff4a9f5d42d29f69a4e76ee080b3c5d916fc42ea
+Author: Jun Furuse <jun.furuse@asahinet.com>
+Date:   Mon Sep 11 01:00:07 2017 +0000
+
+    Applied fam.patch from opam-repository/packages/omake/omake.0.9.8.6-0.rc1/files/opam.patch
+
+commit c9ac9603634707f9e04e8159231c1b58f91f6ee9
+Author: Jun Furuse <jun.furuse@asahinet.com>
+Date:   Mon Sep 11 00:59:55 2017 +0000
+
+    Applied fam.patch from opam-repository/packages/omake/omake.0.9.8.6-0.rc1/files/readline.patch
+
+commit 460bc87c62b0b3438812650d2b6403b240a6d62f
+Author: Jun Furuse <jun.furuse@asahinet.com>
+Date:   Mon Sep 11 00:59:33 2017 +0000
+
+    Applied fam.patch from opam-repository/packages/omake/omake.0.9.8.6-0.rc1/files/netbsd_fam.patch
+
+commit 5a28a3a1656a2f971921bfb2f970b5533745e4cf
+Author: Jun Furuse <jun.furuse@asahinet.com>
+Date:   Mon Sep 11 00:59:08 2017 +0000
+
+    Applied fam.patch from opam-repository/packages/omake/omake.0.9.8.6-0.rc1/files/fam.patch
+
+commit fe85b4dfae16eb3fb9d06e56735860f7a93464e9
+Author: Jun Furuse <jun.furuse@asahinet.com>
+Date:   Mon Sep 11 00:58:13 2017 +0000
+
+    Moving to http://pkgs.fedoraproject.org/repo/pkgs/ocaml-omake/omake-0.9.8.6-0.rc1.tar.gz/fe39a476ef4e33b7ba2ca77a6bcaded2/omake-0.9.8.6-0.rc1.tar.gz
+
+commit 33b17d181a6fdc3bad9887c6de0e472c756f021f
+Author: Jun FURUSE <jun.furuse@sc.com>
+Date:   Thu Oct 16 11:00:34 2014 +0800
+
+    added original svn 0.9.8.6-13270
+
+commit 10cdd894a6151607f30ce38e83f34d1e1472cc5d
+Author: Jun FURUSE <jun.furuse@sc.com>
+Date:   Thu Oct 16 10:58:06 2014 +0800
+
+    readme
+
+
 For a more verbose changelog, see http://omake.metaprl.org/changelog.html
 
 OMake 0.9.8.6 [10/26/2010]
