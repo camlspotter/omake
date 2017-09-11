@@ -7,7 +7,6 @@ This is a maintenance version of OMake 0.9, based on 0.9.8.6-0.rc1.
 ## Why not 0.10.x ?
 
 There are several issues introduced in 0.10.x. 
-For example `omake -P` is no longer working in Mac OS X.
 Unfortunately these issues seem not to be fixed in near future.
 
 The source code difference between 0.9.8.6 and 0.10.x is too huge 
