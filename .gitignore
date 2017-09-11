@@ -123,3 +123,4 @@ src/shell/omake_shell_parse.ml
 src/shell/omake_shell_parse.mli
 src/shell/omake_shell_sys.ml
 src/util/ocaml_patch.ml
+*~

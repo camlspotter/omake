@@ -1,6 +1,6 @@
 # OMake 0.9
 
-This is a maintenance version of OMake 0.9.8.6-0.rc1.
+This is a maintenance version of OMake 0.9, based on 0.9.8.6-0.rc1.
 
 * Documents: http://omake.metaprl.org/index.html
 

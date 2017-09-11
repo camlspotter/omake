@@ -9,7 +9,7 @@ authors: [
 ]
 license: "GPL2"
 dev-repo: "https://github.com/camlspotter/omake-0.9.git"
-homepage: "https://github.com/camlspotter/omake-0.9/blob/opam-0.9.8.6-0.rc1/README.md"
+homepage: "https://github.com/camlspotter/omake-0.9/README.md"
 bug-reports: "https://github.com/camlspotter/omake-0.9/issues"
 
 build: [
