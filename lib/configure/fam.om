@@ -12,7 +12,22 @@ open configure/Configure
         FAM_CFLAGS = /DFAM_ENABLED /DFAM_PSEUDO
         export
     else
-        # Unix
+      # Unix
+
+      # check whether inotify can be used in Linux
+      if $(equal $(SYSNAME), Linux)
+          ConfMsgChecking(for inotify)
+          if $(CheckHeader sys/inotify.h)
+              ConfMsgResult(found)
+              FAM_AVAILABLE = true
+              FAM_CLIBS =
+              FAM_CFLAGS = -DFAM_ENABLED -DFAM_PSEUDO -DFAM_INOTIFY
+              FAM_CFLAGS += -DHAVE_INOTIFY_H
+              export
+          export
+
+      else
+
         ConfMsgChecking(for FAM)
 
         # See if the FamOpen function exists
@@ -44,3 +59,4 @@ open configure/Configure
             ConfMsgResult(NOT found)
 
         export
+      export
