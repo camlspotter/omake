@@ -1287,7 +1287,7 @@ and eval_shell_output venv pos loc e =
       Unix.unlink tmpname;
       match result with
          Success result ->
-            result
+            Bytes.to_string result
        | Exception exn ->
             raise exn
 

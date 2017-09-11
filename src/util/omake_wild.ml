@@ -127,7 +127,7 @@ let wild_subst_in (slen, s) (plen, prefix, sflen, suffix) =
       String.blit prefix 0 res 0 plen;
       String.blit s 0 res plen slen;
       String.blit suffix 0 res (plen + slen) sflen;
-      res
+      Bytes.to_string res
 
 let wild_subst (_, s) strs =
    String.concat s strs

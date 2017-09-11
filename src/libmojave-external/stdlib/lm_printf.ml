@@ -45,9 +45,9 @@ let extra_formatting file chan formatter =
       ignore (Unix.lseek pid_fd 0 Unix.SEEK_SET);
       Unix.lockf pid_fd Unix.F_LOCK 0;
       try
-         let s = String.make 10 ' ' in
+         let s = Bytes.make 10 ' ' in
          let i = Unix.read pid_fd s 0 10 in
-         let s = String.sub s 0 i in
+         let s = Bytes.sub_string s 0 i in
             int_of_string s
       with _ ->
          0
@@ -55,8 +55,8 @@ let extra_formatting file chan formatter =
    let write_pid i =
       ignore (Unix.lseek pid_fd 0 Unix.SEEK_SET);
       let () = Unix.ftruncate pid_fd 0 in
-      let s = string_of_int i in
-         ignore (Unix.single_write pid_fd s 0 (String.length s));
+      let s = Bytes.of_string @@ string_of_int i in
+         ignore (Unix.single_write pid_fd s 0 (Bytes.length s));
          ignore (Unix.lseek pid_fd 0 Unix.SEEK_SET);
          Unix.lockf pid_fd Unix.F_ULOCK 0
    in

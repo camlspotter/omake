@@ -86,7 +86,7 @@ type ('exp, 'pid, 'value) shell =
    }
 
 type ('exp, 'pid, 'value) status_fun = id -> ('exp, 'pid, 'value) print_flag -> unit
-type output_fun = id -> string -> int -> int -> unit
+type output_fun = id -> bytes -> int -> int -> unit
 
 (*
  * Internal execution server has a few extra functions.

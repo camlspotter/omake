@@ -266,7 +266,7 @@ let omake_magic buf =
        } = Unix.localtime now
    in
       fprintf buf "let default_save_interval = %F\n" !default_save_interval;
-      fprintf buf "let input_magic inx = let s = String.make %d ' ' in really_input inx s 0 %d; s\n" digest_len digest_len;
+      fprintf buf "let input_magic inx = let s = Bytes.make %d ' ' in really_input inx s 0 %d; Bytes.to_string s\n" digest_len digest_len;
       fprintf buf "let output_magic = output_string\n";
       fprintf buf "let cache_magic = \"%s\"\n" (digest_files ".cache.magic" ".odb" !cache_files);
       fprintf buf "let ir_magic = \"%s\"\n"    (digest_files ".omc.magic" ".omc" !omc_files);

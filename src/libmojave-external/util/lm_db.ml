@@ -164,7 +164,7 @@ let unmarshal_tag inx =
 let unmarshal_digest inx =
    let s = String.create digest_length in
       really_input inx s 0 digest_length;
-      s
+      Bytes.to_string s
 
 let unmarshal_string inx =
    let len = input_binary_int inx in
@@ -173,7 +173,7 @@ let unmarshal_string inx =
       else
          let s = String.create len in
             really_input inx s 0 len;
-            s
+            Bytes.to_string s
 
 let unmarshal_strings_old inx =
    let magic = unmarshal_string inx in

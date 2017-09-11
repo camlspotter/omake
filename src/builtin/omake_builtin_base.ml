@@ -1001,13 +1001,14 @@ let get_registry venv pos loc args =
        | "HKEY_USERS"          -> Lm_unix_util.HKEY_USERS
        | s -> raise (OmakeException (loc_pos loc pos, StringStringError ("unknown hkey", s)))
    in
-   let key = String.copy (string_of_value venv pos key) in
+   let key = Bytes.of_string (string_of_value venv pos key) in
    let () =
-      for i = 0 to String.length key - 1 do
-         if key.[i] = '/' then
-            key.[i] <- '\\'
+      for i = 0 to Bytes.length key - 1 do
+         if Bytes.get key i = '/' then
+            Bytes.set key i '\\'
       done
    in
+   let key = Bytes.to_string key in
    let field = string_of_value venv pos field in
       try ValString (Lm_unix_util.registry_find hkey_code key field) with
          Not_found ->
@@ -1591,7 +1592,7 @@ let copy_string test add_escape esc_length src_length s =
             end
    in
       copy 0 0;
-      esc_string
+      Bytes.to_string esc_string
 
 (*
  * Escape special symbols.

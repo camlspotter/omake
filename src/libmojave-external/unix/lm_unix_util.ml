@@ -74,7 +74,7 @@ let rec complete_write fd buf off len =
          complete_write fd buf (off + count) (len - count)
 
 let rec copy_file_fd buffer from_fd to_fd =
-   let count = Unix.read from_fd buffer 0 (String.length buffer) in
+   let count = Unix.read from_fd buffer 0 (Bytes.length buffer) in
       if count > 0 then
          begin
             complete_write to_fd buffer 0 count;

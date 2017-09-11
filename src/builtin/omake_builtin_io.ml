@@ -330,7 +330,7 @@ let read venv pos loc args =
          [fd; amount] ->
             let fd = channel_of_value venv pos fd in
             let amount = int_of_value venv pos amount in
-            let s = String.make amount '\000' in
+            let s = Bytes.make amount '\000' in
             let count =
                try Lm_channel.read fd s 0 amount with
                   Sys_error _
@@ -338,11 +338,11 @@ let read venv pos loc args =
                      raise (UncaughtException (pos, exn))
             in
                if count = amount then
-                  ValData s
+                  ValData (Bytes.to_string s)
                else if count = 0 then
                   raise (UncaughtException (pos, End_of_file))
                else
-                  ValData (String.sub s 0 count)
+                  ValData (Bytes.sub_string s 0 count)
        | _ ->
             raise (OmakeException (loc_pos loc pos, ArityMismatch (ArityExact 2, List.length args)))
 
@@ -423,7 +423,7 @@ let write venv pos loc args =
             String.length buf
    in
    let count =
-      try Lm_channel.write fd buf off len with
+      try Lm_channel.write fd (Bytes.of_string buf) off len with (* XXX *)
          Sys_error _
        | Invalid_argument _ as exn ->
             raise (UncaughtException (pos, exn))

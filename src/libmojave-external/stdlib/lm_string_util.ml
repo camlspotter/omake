@@ -1126,7 +1126,7 @@ let parse_args_list line =
       else
          let c = line.[k] in
             if c = '"' then
-               let s = String.sub buf 0 j in
+               let s = Bytes.sub_string buf 0 j in
                   match skip (succ k) with
                      [] -> raise (Invalid_argument "Lm_string_util.parse_args - internal error")
                    | h::tl -> (s::h)::tl
@@ -1252,12 +1252,12 @@ let sub name s i len =
 let blit name froms i tos j len =
    if !debug_string then
       let from_len = String.length froms in
-      let to_len = String.length tos in
+      let to_len = Bytes.length tos in
          if i >= 0 & j >= 0 & len >= 0 & i + len < from_len & j + len < to_len then
             String.blit froms i tos j len
          else
             begin
-               eprintf "String_util.blit_error: %s: %s %d %s %d %d@." name froms i tos j len;
+               eprintf "String_util.blit_error: %s: %s %d %s %d %d@." name froms i (Bytes.to_string tos) j len;
                raise (Failure "String_util.blit")
             end
    else
@@ -1265,12 +1265,12 @@ let blit name froms i tos j len =
 
 let set name s i c =
    if !debug_string then
-      let len = String.length s in
+      let len = Bytes.length s in
          if i >= 0 & i < len then
-            String.set s i c
+            Bytes.set s i c
          else
             begin
-               eprintf "String_util.set error: %s: %s.[%d] <- %c@." name s i c;
+               eprintf "String_util.set error: %s: %s.[%d] <- %c@." name (Bytes.to_string s) i c;
                raise (Failure "String_util.set")
             end
    else
@@ -1312,7 +1312,7 @@ let hexify s =
             buf.[2 * i] <- hex_char ((code lsr 4) land 15);
             buf.[2 * i + 1] <- hex_char (code land 15)
       done;
-      buf
+      Bytes.to_string buf
 
 let hexify_sub s off len =
    let buf = String.create (2 * len) in
@@ -1321,7 +1321,7 @@ let hexify_sub s off len =
             buf.[2 * i] <- hex_char ((code lsr 4) land 15);
             buf.[2 * i + 1] <- hex_char (code land 15)
       done;
-      buf
+      Bytes.to_string buf
 
 let unhex i =
    match i with
@@ -1346,7 +1346,7 @@ let unhexify s =
                end
          in
             unhexify 0 0;
-            buf
+            Bytes.to_string buf
       else
          raise (Failure "unhexify")
 
@@ -1522,13 +1522,13 @@ let unhex_char c1 c2 =
  *)
 let decode_hex_name uri =
    let len = String.length uri in
-   let buf = String.create len in
+   let buf = Bytes.create len in
    let rec convert i j =
       if j = len then
          if i = len then
             buf
          else
-            String.sub buf 0 i
+            Bytes.sub buf 0 i
       else if uri.[j] = '+' then
          begin
             buf.[i] <- ' ';
@@ -1545,7 +1545,7 @@ let decode_hex_name uri =
             convert (i + 1) (j + 1)
          end
    in
-      convert 0 0
+      Bytes.to_string @@ convert 0 0
 
 (*
  * Encode a string into hex.
@@ -1558,10 +1558,10 @@ let hex_char code =
 
 let encode_hex_name uri =
    let len = String.length uri in
-   let buf = String.create (3 * len) in
+   let buf = Bytes.create (3 * len) in
    let rec convert i j =
       if i = len then
-         String.sub buf 0 j
+         Bytes.sub buf 0 j
       else
          match uri.[i] with
             ('0'..'9' | 'A'..'Z' | 'a'..'z' | '/' | '_' | '-' | '.') as c ->
@@ -1574,7 +1574,7 @@ let encode_hex_name uri =
                   buf.[j + 2] <- hex_char (code land 15);
                   convert (succ i) (j + 3)
    in
-      convert 0 0
+      Bytes.to_string @@ convert 0 0
 
 (*
  * -*-

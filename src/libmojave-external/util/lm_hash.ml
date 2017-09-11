@@ -1441,7 +1441,7 @@ struct
          for i = 0 to pred digest_length do
             s.[i] <- Char.chr (digest.(i) land 0xff)
          done;
-         s
+         Bytes.to_string s
 end;;
 (* %%MAGICEND%% *)
 

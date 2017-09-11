@@ -762,7 +762,7 @@ let sequence_rev venv pos loc args =
                          for i = 0 to len - 1 do
                             s2.[i] <- s1.[len - i - 1]
                          done;
-                         ValData s2
+                         ValData (Bytes.to_string s2)
                  | ValQuote vl ->
                       let s1 = string_of_quote venv pos None vl in
                       let len = String.length s1 in
@@ -770,7 +770,7 @@ let sequence_rev venv pos loc args =
                          for i = 0 to len - 1 do
                             s2.[i] <- s1.[len - i - 1]
                          done;
-                         ValData s2
+                         ValData (Bytes.to_string s2)
                  | ValQuoteString (c, vl) ->
                       let s1 = string_of_quote venv pos (Some c) vl in
                       let len = String.length s1 in
@@ -778,7 +778,7 @@ let sequence_rev venv pos loc args =
                          for i = 0 to len - 1 do
                             s2.[i] <- s1.[len - i - 1]
                          done;
-                         ValData s2
+                         ValData (Bytes.to_string s2)
                  | ValCases cases ->
                       ValCases (List.rev cases)
                  | ValSequence _

@@ -54,13 +54,13 @@ val with_pipe : (Unix.file_descr -> Unix.file_descr -> 'a) -> 'a
 (*
  * Copy data to standard channels.
  *)
-val copy_stdout : id -> string -> int -> int -> unit
-val copy_stderr : id -> string -> int -> int -> unit
+val copy_stdout : id -> bytes -> int -> int -> unit
+val copy_stderr : id -> bytes -> int -> int -> unit
 
 (*
  * Copy data to a file.
  *)
-val copy_file : string -> (id -> string -> int -> int -> unit)
+val copy_file : string -> (id -> bytes -> int -> int -> unit)
 
 (*
  * Tee to a file.
@@ -71,8 +71,8 @@ val tee_none        : tee
 val tee_create      : bool -> tee
 val tee_close       : tee -> unit
 val tee_file        : tee -> string option
-val tee_stdout      : tee -> bool -> id -> string -> int -> int -> unit
-val tee_stderr      : tee -> bool -> id -> string -> int -> int -> unit
+val tee_stdout      : tee -> bool -> id -> bytes -> int -> int -> unit
+val tee_stderr      : tee -> bool -> id -> bytes -> int -> int -> unit
 
 (*
  * -*-

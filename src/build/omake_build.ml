@@ -1481,7 +1481,7 @@ let save_and_finish_scanner_success env command filename =
             let options = env_options env in
             let divert_only = not (opt_output options OutputNormal) in
             let handle_err = tee_stderr command.command_tee divert_only null_id in
-            let out = make_formatter handle_err (fun () -> handle_err "" 0 0) in
+            let out = make_formatter (fun s -> handle_err @@ Bytes.of_string s) (fun () -> handle_err Bytes.empty 0 0) in
                fprintf out "@?*** omake: scanner produced ill-formed output@.";
                pp_status_lines out options shell "scan" lines;
                fprintf out "*** omake: @[<hv0>scanner output is saved in@ %s@]@." filename;
@@ -2788,7 +2788,7 @@ let print_summary ?(unlink = true) env =
    let inx = open_in_bin env.env_summary in
    let buffer = String.create 256 in
    let rec copy () =
-      let amount = input inx buffer 0 (String.length buffer) in
+      let amount = input inx buffer 0 (Bytes.length buffer) in
          if amount > 0 then begin
             Pervasives.output Pervasives.stderr buffer 0 amount;
             copy ()

@@ -63,7 +63,7 @@ sig
 
    (* IO *)
    val input_byte    : in_channel -> int
-   val input_buffer  : in_channel -> string -> int -> int -> unit
+   val input_buffer  : in_channel -> bytes -> int -> int -> unit
    val output_byte   : out_channel -> int -> unit
    val output_buffer : out_channel -> string -> int -> int -> unit
 end
@@ -363,7 +363,7 @@ struct
       let s = String.create len in
          IO.input_buffer inc s 0 len;
          (* eprintf "String: %s%t" s eflush; *)
-         String s
+         String (Bytes.to_string s)
 
    (*
     * Build a value from the input.

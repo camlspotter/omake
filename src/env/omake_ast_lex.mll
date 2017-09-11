@@ -1027,7 +1027,7 @@ let prompt_ext s =
 (* Prune the prompt to a reasonable length *)
 let prompt_prune prompt indent =
    let max_len = 8 in
-   let s = String.make (indent * tabstop + max_len + 2) ' ' in
+   let s = Bytes.make (indent * tabstop + max_len + 2) ' ' in
    let length = String.length prompt in
       if length > max_len then
          begin
@@ -1036,7 +1036,7 @@ let prompt_prune prompt indent =
          end
       else
          String.blit prompt 0 s 0 length;
-      s
+      Bytes.to_string s
 
 let prompt_indent prompt root indent =
    if root then

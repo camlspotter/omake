@@ -397,7 +397,7 @@ let compute_option_tree spec =
 (* Wraps at terminal width *)
 let rec print_doc_string opt_width s =
    let width = Lm_termsize.stdout_width - opt_width in
-   let margin = String.make (opt_width + 1) ' ' in
+   let margin = Bytes.make (opt_width + 1) ' ' in
    let () = margin.[0] <- '\n' in
    let len = String.length s in
       if len <= width then
@@ -406,11 +406,11 @@ let rec print_doc_string opt_width s =
          if String.rcontains_from s width ' ' then begin
             let i = String.rindex_from s width ' ' in
                print_string (String.sub s 0 i);
-               print_string margin;
+               print_bytes margin;
                print_doc_string opt_width (String.sub s (i+1) (len - i - 1))
          end else begin
             print_string (String.sub s 0 width);
-            print_string margin;
+            print_bytes margin;
             print_doc_string opt_width (String.sub s width (len - width))
          end
 
@@ -527,10 +527,10 @@ let rec get_next_option mode argv argv_length current =
             else
                opt, current, mode
     | MultiLetterPending (opt, i) ->
-         let s = String.make 2 opt.[i] in
+         let s = Bytes.make 2 opt.[i] in
          let mode = MultiLetterPending (opt, succ i) in
             s.[0] <- '-';
-            s, current, mode
+            Bytes.to_string s, current, mode
 
 
 (* parse

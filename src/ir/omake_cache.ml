@@ -504,7 +504,7 @@ let digest_sample_exn fd file_size =
       done;
 
       (* Take the digest of the sample *)
-      Digest.string sample
+      Digest.bytes sample
 
 let digest_large name file_size =
    try

@@ -65,8 +65,8 @@ type ('exp, 'pid, 'value) request =
 type ('exp, 'pid, 'value) response =
    ResponseCreate of bool
  | ResponseExited of id * int * 'value
- | ResponseStdout of id * string
- | ResponseStderr of id * string
+ | ResponseStdout of id * bytes
+ | ResponseStderr of id * bytes
  | ResponseStatus of id * ('exp, 'pid, 'value) print_flag
 
 (*
@@ -113,9 +113,9 @@ let pp_print_response buf (shell, response) =
     | ResponseExited (id, code, _) ->
          eprintf "ResponseExited (%a, %d)" pp_print_pid id code
     | ResponseStdout (id, s) ->
-         eprintf "ResponseStdout (%a, \"%s\")" pp_print_pid id (String.escaped s)
+         eprintf "ResponseStdout (%a, \"%s\")" pp_print_pid id (String.escaped @@ Bytes.to_string s)
     | ResponseStderr (id, s) ->
-         eprintf "ResponseStderr (%a, \"%s\")" pp_print_pid id (String.escaped s)
+         eprintf "ResponseStderr (%a, \"%s\")" pp_print_pid id (String.escaped @@ Bytes.to_string s)
     | ResponseStatus (id, flag) ->
          eprintf "@[<hv 0>@[<hv 3>ResponseStatus {@ id = %a;@ flag = %a@]@ }@]" (**)
             pp_print_pid id
@@ -166,10 +166,10 @@ let recv_response = recvmsg
  * Handle output.
  *)
 let handle_stdout id buf off len =
-   send_response (ResponseStdout (id, String.sub buf off len))
+   send_response (ResponseStdout (id, Bytes.sub buf off len))
 
 let handle_stderr id buf off len =
-   send_response (ResponseStderr (id, String.sub buf off len))
+   send_response (ResponseStderr (id, Bytes.sub buf off len))
 
 let handle_status id flag =
    send_response (ResponseStatus (id, flag))
@@ -411,7 +411,7 @@ struct
                raise (Invalid_argument "Omake_exec_remote.handle_stdout: no such job")
       in
       let { job_handle_out = handle_out } = job in
-         handle_out id buf 0 (String.length buf)
+         handle_out id buf 0 (Bytes.length buf)
 
    let handle_stderr server id buf =
       let job =
@@ -420,7 +420,7 @@ struct
                raise (Invalid_argument "Omake_exec_remote.handle_stderr: no such job")
       in
       let { job_handle_err = handle_err } = job in
-         handle_err id buf 0 (String.length buf)
+         handle_err id buf 0 (Bytes.length buf)
 
    let handle_status server id flag =
       let job =

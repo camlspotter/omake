@@ -124,11 +124,11 @@ let tilde_collapse dir =
             if len' <= len && tilde_matches dir' dir len' 0 then
                let namelen = String.length name in
                let length = len - len' + namelen + 1 in
-               let s = String.make length ' ' in
+               let s = Bytes.make length ' ' in
                   s.[0] <- '~';
                   String.blit name 0 s 1 namelen;
                   String.blit dir len' s (namelen + 1) (len - len');
-                  s
+                  Bytes.to_string s
             else
                dir
 

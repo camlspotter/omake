@@ -89,7 +89,7 @@ struct
 
         (* A temporary buffer for copying. *)
         job_buffer_len         : int;
-        job_buffer             : string * string;
+        job_buffer             : bytes * bytes
       }
 
    (*
@@ -118,8 +118,8 @@ struct
    (*
     * Print an error to the error channel.
     *)
-   let handle_exn handle_err pp_print_exn id exn =
-      let out = make_formatter (handle_err id) ignore in
+   let handle_exn (handle_err : output_fun) pp_print_exn id exn =
+      let out = make_formatter (fun s -> handle_err id (Bytes.of_string s)) ignore in
          fprintf out "@[<v 3>   *** process creation failed:@ %a@]@." pp_print_exn exn
 
    (*
@@ -280,8 +280,8 @@ struct
                match job.job_state with
                   JobRunning v ->
                      (* Close output channels *)
-                     handle_out id "" 0 0;
-                     handle_err id "" 0 0;
+                     handle_out id Bytes.empty 0 0;
+                     handle_err id Bytes.empty 0 0;
                      job.job_state <- JobFinished (0, v, Unix.gettimeofday() -. job.job_start_time)
                 | JobStarted
                 | JobFinished _ ->
