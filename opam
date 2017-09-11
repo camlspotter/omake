@@ -5,7 +5,6 @@ maintainer: "jun.furuse@gmail.com"
 authors: [
   "Aleksey Nogin"
   "Jason Hickey"
-  "Gerd Stolpmann"
 ]
 license: "GPL2"
 dev-repo: "https://github.com/camlspotter/omake-0.9.git"
