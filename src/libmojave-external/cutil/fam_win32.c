@@ -250,7 +250,7 @@ static void monitor_read(FAMConnection *fc, unsigned request)
 {
     const FILE_NOTIFY_INFORMATION *info;
     unsigned dir_length, name_length, i;
-    char name[NAME_MAX];
+    char name[FAM_NAME_MAX];
     char *buffer;
     FAMEvent *event;
     FAMCodes fam_code;
@@ -298,7 +298,7 @@ static void monitor_read(FAMConnection *fc, unsigned request)
             dir_length = strlen(dir->name);
             name_length = info->FileNameLength / 2;
             length = dir_length + name_length + 2;
-            if(length < NAME_MAX) {
+            if(length < FAM_NAME_MAX) {
                 strcpy(name, dir->name);
                 name[dir_length] = '\\';
                 for(i = 0; i != name_length; i++)
@@ -313,7 +313,7 @@ static void monitor_read(FAMConnection *fc, unsigned request)
                     event->userdata = dir->userdata;
                     event->code = fam_code;
                     event->next = 0;
-                    if(CompatGetLongPathName(name, event->filename, NAME_MAX) == 0)
+                    if(CompatGetLongPathName(name, event->filename, FAM_NAME_MAX) == 0)
                         strcpy(event->filename, name);
                     if(fc->last)
                         fc->last = fc->last->next = event;

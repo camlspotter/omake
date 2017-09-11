@@ -194,7 +194,7 @@ static int monitor_read(FAMConnection *fc)
         eventp->next = 0;
 
         /* Copy the name */
-        amount = MIN(NAME_MAX - 1, ievent->len);
+        amount = MIN(FAM_NAME_MAX - 1, ievent->len);
         memcpy(eventp->filename, ievent->name, amount);
         eventp->filename[amount] = 0;
 

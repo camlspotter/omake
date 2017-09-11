@@ -43,7 +43,7 @@
 /*
  * Maximum file name length.
  */
-#define NAME_MAX                1024
+#define FAM_NAME_MAX                1024
 
 /*
  * Possible events.
@@ -76,7 +76,7 @@ typedef struct fam_event {
     FAMRequest fr;                      // Request number for the directory
     FAMCodes code;                      // Event code
     void *userdata;			// User data from the directory
-    char filename[NAME_MAX];            // Name of the file that changed
+    char filename[FAM_NAME_MAX];            // Name of the file that changed
     struct fam_event *next;             // Linked list
 } FAMEvent;
 

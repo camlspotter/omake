@@ -249,7 +249,7 @@ static int add_famevent_of_kevent( FAMConnection *fc,
         fc->event = fevent;
     }
     fc->last = fevent;
-    strncpy(fevent->filename, dir_info->name, NAME_MAX);
+    strncpy(fevent->filename, dir_info->name, FAM_NAME_MAX);
     return 1;
 }
 
