@@ -26,7 +26,7 @@ EXT_OBJ = .o
 EXT_LIB = .a
 EXE =
 
-OCAMLFLAGS = -g
+OCAMLFLAGS = -g -unsafe-string
 THREADSLIB =
 
 .SUFFIXES: .mll .mly .mli .ml .c .cmi .cmo .cma .o
